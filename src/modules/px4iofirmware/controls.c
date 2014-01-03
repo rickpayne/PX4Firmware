@@ -63,7 +63,10 @@ controls_init(void)
 	dsm_init("/dev/ttyS0");
 
 	/* S.bus input (USART3) */
-	sbus_init("/dev/ttyS2");
+	//sbus_init("/dev/ttyS2");
+
+	/* X.Bus in 'compatability mode' on USART3 */
+	xbus_init("/dev/ttyS2");
 
 	/* default to a 1:1 input map, all enabled */
 	for (unsigned i = 0; i < PX4IO_CONTROL_CHANNELS; i++) {
@@ -113,7 +116,8 @@ controls_tick() {
 	perf_end(c_gather_dsm);
 
 	perf_begin(c_gather_sbus);
-	bool sbus_updated = sbus_input(r_raw_rc_values, &r_raw_rc_count, &rssi, PX4IO_CONTROL_CHANNELS /* XXX this should be INPUT channels, once untangled */);
+	// bool sbus_updated = sbus_input(r_raw_rc_values, &r_raw_rc_count, &rssi, PX4IO_CONTROL_CHANNELS /* XXX this should be INPUT channels, once untangled */);
+	bool sbus_updated = xbus_input(r_raw_rc_values, &r_raw_rc_count, &rssi, PX4IO_CONTROL_CHANNELS /* XXX this should be INPUT channels, once untangled */);
 	if (sbus_updated) {
 		r_status_flags |= PX4IO_P_STATUS_FLAGS_RC_SBUS;
 	}
